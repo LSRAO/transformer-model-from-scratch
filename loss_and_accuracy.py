@@ -121,8 +121,8 @@ def train_step(encoder_input, decoder_input, decoder_output):
 
 for epoch in range(epochs):
 
-    train_loss.reset_states()
-    train_accuracy.reset_states()
+    train_loss.reset_state()
+    train_accuracy.reset_state()
 
     print("\nStart of epoch %d" % (epoch + 1))
 

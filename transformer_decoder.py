@@ -27,7 +27,7 @@ class DecoderLayer(Layer):
         input_layer = Input(shape=(self.sequence_length, self.d_model))
         return Model(inputs=[input_layer], outputs=self.call(input_layer, input_layer, None, None, True))
     
-    def call(self, x, encoder_output, lookahead_mask, padding_mask, training):
+    def call(self, x, encoder_output, lookahead_mask=None, padding_mask=None, training=True):
         # Multi-head attention layer
         multihead_output1 = self.multihead_attention1(x, x, x, mask=lookahead_mask)
         # Expected output shape = (batch_size, sequence_length, d_model)
