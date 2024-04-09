@@ -26,7 +26,7 @@ class PrepareDataset:
         tokenizer.fit_on_texts(dataset)
         return len(tokenizer.word_index) + 1
     
-    def make_list(dataset):
+    def make_list(self,dataset):
             return f"""<START> Movie_name : {dataset['title']}, Length : {dataset['length']}, Release_year : {dataset['release_year']}, Genere : {dataset['genre']}, Plot_summary : {dataset['plot_summary']}, Cast : {dataset['cast']}, imdb_rating : {dataset['rating_imdb']}, Rating_rotten_tomatoes : {dataset['rating_rotten_tomatoes']} <EOS>"""
 
 
@@ -37,15 +37,18 @@ class PrepareDataset:
         # Extract input and target columns 
 
         
-
-        ds_string = self.make_list(train)
+        ds_string = []
+        for i in train:
+            ds_string.append(self.make_list(i))
         # Random shuffle the dataset
-        # shuffle(ds_string)
+        shuffle(ds_string)
+        # print(ds_string[0])
+        # return 0
 
         # Split the dataset
         train_size = int(self.n_sentences * self.train_split)
         train = ds_string[:train_size]
-        print(train)
+        # print(train)
 
         # Prepare tokenizer for the encoder input
         enc_tokenizer = self.create_tokenizer([inp for inp in train])
