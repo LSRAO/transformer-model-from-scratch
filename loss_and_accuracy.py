@@ -1,7 +1,7 @@
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers.schedules import LearningRateSchedule
 from tensorflow.keras.metrics import Mean
-from tensorflow import data, train, math, reduce_sum, cast, equal, argmax, float32, GradientTape, TensorSpec, function, int64
+from tensorflow import data, train, math, reduce_sum, cast, equal, argmax, float32, GradientTape, TensorSpec, function, int64, maximum
 from keras.losses import sparse_categorical_crossentropy
 from transformer_model import TransformerModel
 from prepare_dataset import PrepareDataset
@@ -17,7 +17,7 @@ d_ff = 2048  # Dimensionality of the inner fully connected layer
 n = 6  # Number of layers in the encoder stack
 
 # Define the training parameters
-epochs = 2
+epochs = 50
 batch_size = 64
 beta_1 = 0.9
 beta_2 = 0.98
@@ -36,10 +36,16 @@ class LRScheduler(LearningRateSchedule):
     def __call__(self, step_num):
 
         # Linearly increasing the learning rate for the first warmup_steps, and decreasing it thereafter
-        arg1 = step_num ** -0.5
-        arg2 = step_num * (self.warmup_steps ** -1.5)
+        arg1 = cast(step_num, float32) ** -0.5
+        arg2 = step_num * (cast(self.warmup_steps, float32) ** -1.5)
 
-        return (self.d_model ** -0.5) * math.minimum(arg1, arg2)
+        arg2 = cast(arg2, int64)
+        arg2 = maximum(arg2, 0)
+
+        arg1 = cast(arg1, int64)
+        arg1 = maximum(arg1, 0)
+
+        return (cast(self.d_model ** -0.5, int64)) * math.minimum(arg1, arg2)
 
 
 # Instantiate an Adam optimizer
@@ -47,7 +53,7 @@ optimizer = Adam(LRScheduler(d_model), beta_1, beta_2, epsilon)
 
 # Prepare the training and test splits of the dataset
 dataset = PrepareDataset()
-trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('english-german-both.pkl')
+trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('train.csv')
 
 # Prepare the dataset batches
 train_dataset = data.Dataset.from_tensor_slices((trainX, trainY))
@@ -93,7 +99,7 @@ train_accuracy = Mean(name='train_accuracy')
 
 # Create a checkpoint object and manager to manage multiple checkpoints
 ckpt = train.Checkpoint(model=training_model, optimizer=optimizer)
-ckpt_manager = train.CheckpointManager(ckpt, "./checkpoints", max_to_keep=3)
+ckpt_manager = train.CheckpointManager(ckpt, "./checkpoints", max_to_keep=None)
 
 # Speeding up the training process
 @function
@@ -145,9 +151,13 @@ for epoch in range(epochs):
     # Print epoch number and loss value at the end of every epoch
     print("Epoch %d: Training Loss %.4f, Training Accuracy %.4f" % (epoch + 1, train_loss.result(), train_accuracy.result()))
 
-    # Save a checkpoint after every five epochs
-    if (epoch + 1) % 5 == 0:
+    # Save a checkpoint after every n epochs
+    if (epoch + 1) % 1 == 0:
         save_path = ckpt_manager.save()
+        
         print("Saved checkpoint at epoch %d" % (epoch + 1))
+        ckpt.restore(save_path=save_path)
+        training_model.save_weights("weights/wghts" + str(epoch + 1) + ".weights.h5")
+    
 
 print("Total time taken: %.2fs" % (time() - start_time))

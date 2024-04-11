@@ -4,6 +4,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow import convert_to_tensor, int64
 import pandas as pd
 from datasets import load_dataset,Dataset
+from pickle import load, dump, HIGHEST_PROTOCOL
 
 
 class PrepareDataset:
@@ -26,17 +27,16 @@ class PrepareDataset:
         tokenizer.fit_on_texts(dataset)
         return len(tokenizer.word_index) + 1
     
-<<<<<<< HEAD
-    def make_list(self, dataset):
-=======
     def make_list(self,dataset):
->>>>>>> c8b67ab7f0274f4b67a0aaa6e55a0bc29446deca
             return f"""<START> Movie_name : {dataset['title']}, Length : {dataset['length']}, Release_year : {dataset['release_year']}, Genere : {dataset['genre']}, Plot_summary : {dataset['plot_summary']}, Cast : {dataset['cast']}, imdb_rating : {dataset['rating_imdb']}, Rating_rotten_tomatoes : {dataset['rating_rotten_tomatoes']} <EOS>"""
-
+    
+    def save_tokenizer(self, tokenizer, name):
+        with open(name + '_tokenizer.pkl', 'wb') as handle:
+            dump(tokenizer, handle, protocol=HIGHEST_PROTOCOL)
 
     def __call__(self, filename):
         # Load the CSV file
-        train = Dataset.from_csv('train.csv')
+        train = Dataset.from_csv(filename)
 
         # Extract input and target columns 
 
@@ -74,6 +74,12 @@ class PrepareDataset:
         trainY = pad_sequences(trainY, maxlen=dec_seq_length, padding='post')
         trainY = convert_to_tensor(trainY, dtype=int64)
 
+        # Save the encoder tokenizer
+        self.save_tokenizer(enc_tokenizer, 'enc')
+
+        # Save the decoder tokenizer
+        self.save_tokenizer(dec_tokenizer, 'dec')
+
         return trainX, trainY, train, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size
 
 
@@ -81,4 +87,5 @@ class PrepareDataset:
 dataset = PrepareDataset()
 trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('train.csv')
 
-print(train_orig[0], '\n', trainX[0, :])
+# print(train_orig[0], '\n', trainX[0, :])
+print(trainY)
