@@ -82,16 +82,16 @@ class Translate(Module):
         for i in range(output.shape[0]):
             
             key = output[i]
-            if key<= 1452:
-                print(dec_tokenizer.index_word[key])
-                output_str.append(dec_tokenizer.index_word[key])
+            # if key<= 1452:
+            print(dec_tokenizer.index_word[key])
+            output_str.append(dec_tokenizer.index_word[key])
         
         return output_str
     
-sentence = "Movie_name: Inception Actor: Leonardo"
+sentence = "The plot"
 
 # Load the trained model's weights at the specified epoch
-inferencing_model.load_weights("weights/wghts45.weights.h5")
+inferencing_model.load_weights("weights/wghts50.weights.h5")
 
 
 # Create a new instance of the 'Translate' class

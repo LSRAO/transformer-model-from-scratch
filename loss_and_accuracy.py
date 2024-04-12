@@ -14,10 +14,10 @@ d_k = 64  # Dimensionality of the linearly projected queries and keys
 d_v = 64  # Dimensionality of the linearly projected values
 d_model = 512  # Dimensionality of model layers' outputs
 d_ff = 2048  # Dimensionality of the inner fully connected layer
-n = 6  # Number of layers in the encoder stack
+n = 12  # Number of layers in the encoder stack
 
 # Define the training parameters
-epochs = 50
+epochs = 100
 batch_size = 64
 beta_1 = 0.9
 beta_2 = 0.98
@@ -53,7 +53,7 @@ optimizer = Adam(LRScheduler(d_model), beta_1, beta_2, epsilon)
 
 # Prepare the training and test splits of the dataset
 dataset = PrepareDataset()
-trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('train.csv')
+trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('NOLAN_wiki/moving_df.csv')
 
 # Prepare the dataset batches
 train_dataset = data.Dataset.from_tensor_slices((trainX, trainY))
