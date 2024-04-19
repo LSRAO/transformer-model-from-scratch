@@ -1,0 +1,7 @@
+nolan/
+checkpoints/
+checkpoints_discasrd/
+tokenizer/
+weights/
+weights_v1/
+weightsv2_epoch_50/
