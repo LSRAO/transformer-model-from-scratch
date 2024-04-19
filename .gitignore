@@ -5,4 +5,7 @@ tokenizer/
 weights/
 weights_v1/
 weightsv2_epoch_50/
+<<<<<<< HEAD
 weights_enger/
+=======
+>>>>>>> 41e63f0017bdd3e9e1c7dc0f5a5f3baf127ee495

@@ -87,10 +87,17 @@ class Generate(Module):
         
         return output_str
     
+<<<<<<< HEAD
 sentence = "The story"
 
 # Load the trained model's weights at the specified epoch
 inferencing_model.load_weights("weights/wghts100.weights.h5")
+=======
+sentence = "The plot"
+
+# Load the trained model's weights at the specified epoch
+inferencing_model.load_weights("weights/wghts50.weights.h5")
+>>>>>>> 41e63f0017bdd3e9e1c7dc0f5a5f3baf127ee495
 
 
 # Create a new instance of the 'Translate' class
