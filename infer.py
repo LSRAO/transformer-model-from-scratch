@@ -21,10 +21,9 @@ dec_vocab_size = 3858  # Decoder vocabulary size
 # Create model
 inferencing_model = TransformerModel(enc_vocab_size, dec_vocab_size, enc_seq_length, dec_seq_length, h, d_k, d_v, d_model, d_ff, n, 0)
 
-
-class Translate(Module):
+class Generate(Module):
     def __init__(self, inferencing_model, **kwargs):
-        super(Translate, self).__init__(**kwargs)
+        super(Generate, self).__init__(**kwargs)
         self.transformer = inferencing_model
 
     def load_tokenizer(self, name):
@@ -82,20 +81,20 @@ class Translate(Module):
         for i in range(output.shape[0]):
             
             key = output[i]
-            if key<= 1452:
-                print(dec_tokenizer.index_word[key])
-                output_str.append(dec_tokenizer.index_word[key])
+            # if key<= 1452:
+            print(dec_tokenizer.index_word[key])
+            output_str.append(dec_tokenizer.index_word[key])
         
         return output_str
     
-sentence = "Movie_name: Inception Actor: Leonardo"
+sentence = "The story"
 
 # Load the trained model's weights at the specified epoch
-inferencing_model.load_weights("weights/wghts45.weights.h5")
+inferencing_model.load_weights("weights/wghts100.weights.h5")
 
 
 # Create a new instance of the 'Translate' class
-generator = Translate(inferencing_model)
+generator = Generate(inferencing_model)
 
 # Translate the input sentence
 print(generator(sentence))

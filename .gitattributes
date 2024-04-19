@@ -1,0 +1,6 @@
+dec_tokenizer.pkl filter=lfs diff=lfs merge=lfs -text
+enc_tokenizer.pkl filter=lfs diff=lfs merge=lfs -text
+english-german-both.pkl filter=lfs diff=lfs merge=lfs -text
+english-german-test.pkl filter=lfs diff=lfs merge=lfs -text
+english-german-train.pkl filter=lfs diff=lfs merge=lfs -text
+english-german.pkl filter=lfs diff=lfs merge=lfs -text

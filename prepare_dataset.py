@@ -28,7 +28,8 @@ class PrepareDataset:
         return len(tokenizer.word_index) + 1
     
     def make_list(self,dataset):
-            return f"""<START> Movie_name : {dataset['title']}, Length : {dataset['length']}, Release_year : {dataset['release_year']}, Genere : {dataset['genre']}, Plot_summary : {dataset['plot_summary']}, Cast : {dataset['cast']}, imdb_rating : {dataset['rating_imdb']}, Rating_rotten_tomatoes : {dataset['rating_rotten_tomatoes']} <EOS>"""
+            # return f"""<START> Movie_name : {dataset['title']}, Length : {dataset['length']}, Release_year : {dataset['release_year']}, Genere : {dataset['genre']}, Plot_summary : {dataset['plot_summary']}, Cast : {dataset['cast']}, imdb_rating : {dataset['rating_imdb']}, Rating_rotten_tomatoes : {dataset['rating_rotten_tomatoes']} <EOS>"""
+            return f"""<START> PAGE: {dataset['page']}, section_title: {dataset['section_title']}, text: {dataset['text']} <EOS>"""
     
     def save_tokenizer(self, tokenizer, name):
         with open(name + '_tokenizer.pkl', 'wb') as handle:
@@ -37,6 +38,7 @@ class PrepareDataset:
     def __call__(self, filename):
         # Load the CSV file
         train = Dataset.from_csv(filename)
+        # print(train.describe())
 
         # Extract input and target columns 
 
@@ -84,8 +86,8 @@ class PrepareDataset:
 
 
 # Prepare the training data
-dataset = PrepareDataset()
-trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('train.csv')
+# dataset = PrepareDataset()
+# trainX, trainY, train_orig, enc_seq_length, dec_seq_length, enc_vocab_size, dec_vocab_size = dataset('train.csv')
 
 # print(train_orig[0], '\n', trainX[0, :])
-print(trainY)
+# print(trainY)

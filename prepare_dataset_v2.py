@@ -1,8 +1,8 @@
 from pickle import load, dump, HIGHEST_PROTOCOL
 from numpy.random import shuffle
 from numpy import savetxt
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow import convert_to_tensor, int64
 
 class PrepareDataset:
